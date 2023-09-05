@@ -2,7 +2,6 @@ flask
 flask_session
 werkzeug
 datetime
-functools
 flask_mail
 dotenv
 os
