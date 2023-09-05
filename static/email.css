@@ -1,0 +1,120 @@
+body {
+    background-color: rgb(205, 243, 245);
+    justify-content: center; /* Center the content horizontally */
+    align-items: center; /* Center the content vertically */
+    min-height: 100vh; /* Ensure the content takes at least the full viewport height */
+    margin: 0; /* Remove default body margin */
+    min-height: 100vh;    
+    display: flex;
+}
+
+h1 {
+    font-weight: bold;
+    font-family: 'Pangolin', cursive;
+    color: black;
+    font-size: 40px;
+    margin-top: 0px;
+   
+}
+
+.description {
+    font-family: 'Pangolin', cursive;
+    text-align: left;
+    color: black;
+    font-size: 20px;
+    padding-top: 10px;
+    margin-left: 40px;
+}
+
+.code {
+    font-family: 'Pangolin', cursive;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    font-size: 25px;
+}
+
+.container {
+    background-color: black;
+    width: 250px;
+    margin-top: 15px;
+    margin-bottom: 35px;
+    height: 35px;
+    padding-top: 7px;
+    text-align: center;
+    align-items: center;
+    border-radius: 8px;
+    margin-left: 240px;
+}
+
+
+
+.container4 .description {
+    padding-right: 20px;
+}
+
+.final {
+    padding-left: 515px;
+    margin-top: 40px;
+}
+
+.innerlayer {
+    width: 750px;
+    height: 580px;
+    background-color: white;
+    border-radius: 10px;
+}
+
+.innerlayer h1 {
+    font-size: 30px;
+    font-weight: bold;
+    margin-left: 25px;
+    padding-top: 30px   ;
+    margin-bottom: 20px;
+    padding-bottom: 25px;
+    
+    
+}
+
+.code {
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    
+}
+
+.description span {
+    font-weight: bold;
+    color: red;
+}
+
+.music {
+    color: rgb(45, 240, 247);
+    margin-left: 15px;
+}
+
+.generator {
+    color: yellow;
+}
+
+.container-title {
+    background-color: rgba(92, 9, 92, 0.786);
+    border-radius: 10px 10px  3px 3px ;
+    width: 750px;
+    
+}
+
+#b4code {
+    text-align: center;
+    margin-left: 0px;
+    font-size: 20px;
+    margin-top: 55px;
+}
+
+#signature {
+    margin-left:0px;
+    margin-top: 0px;
+    font-style: italic;
+    padding-top:5px;
+}
+

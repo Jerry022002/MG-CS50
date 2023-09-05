@@ -1,0 +1,128 @@
+{% extends "layout.html" %}
+{% block title %} Forget Password {% endblock %}
+
+{% block main %}
+
+  <div class="main_content">
+    <div class="container3">
+        <form class="sign_up1" id="forget_form" action="/forget" method="post">
+            <p class="login_title" id="forget_title">Reset Password</p>
+            <div class="input-group">
+                <input type="text" name="username" class="form-input" placeholder="Username">
+                <span class="username-status" id="check_username"></span>
+            </div>
+            <div class="input-group">
+              <input type="text" name="email" class="form-input" placeholder="Email">
+              <span class="username-status" id="check_email"></span>
+            </div>
+            <button class="btn2" type="submit">RESET PASSWORD</button>      
+            <div class="status"></div>
+        </form> 
+    </div>
+  </div>
+
+  <script>
+    // Select the elements in the form
+    let username_input = document.querySelector('input[name="username"]');
+    let email_input = document.querySelector('input[name="email"]');
+    let username_status = document.querySelector('#check_username');
+    let email_status = document.querySelector('#check_email');
+    let forget_status = document.querySelector('.status');
+
+    // Select button
+    let button = document.querySelector('button[type="submit"]');
+    button.addEventListener('click', async function (event) {
+      // Not allow to submit the form if requirement not met
+      event.preventDefault();
+
+
+      console.log('Username inputted: ', username_input.value);
+      console.log('Email inputted: ', email_input.value);
+      // Check if the username and email fields are empty
+      if (!username_input.value || !email_input.value) {
+        if (!username_input.value) {
+          // Display the error message if the username is empty
+          console.log('Username is empty');
+          username_status.innerHTML = 'EMPTY USERNAME';
+          username_input.classList.add('input-error');
+        } else {
+          username_status.innerHTML = '';
+          username_input.classList.remove('input-error');
+        }
+
+        if (!email_input.value) {
+          // Display the error message if the email is empty
+          console.log('Email is empty');
+          email_status.innerHTML = 'EMPTY EMAIL';
+          email_input.classList.add('input-error');
+        } else {
+          email_status.innerHTML = '';
+          email_input.classList.remove('input-error');
+        }
+        
+      } else {
+        console.log('Username and email is inputted');
+        // Remove error messages
+        username_status.innerHTML = '';
+        email_status.innerHTML = '';
+        username_input.classList.remove('input-error');
+        email_input.classList.remove('input-error');
+
+        // Create form data using URLSearchParams
+        let formData = new URLSearchParams();
+        formData.append('username', username_input.value);
+        formData.append('email', email_input.value);
+        formData.append('check_data', true);
+
+        // Send a request to the server to check if the username and email are correct
+        console.log('Sending a request to the server to check if the username and email are correct');
+        let response = await fetch('/forget', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: formData.toString()
+        });
+
+        console.log('Waiting for the server to respond');
+
+        // If server return JSON
+
+        try {
+          console.log('RESPONSE STATUS', response.status);
+          let result = await response.json();
+          console.log('RESULT', result);
+          // Display the result if see the error
+          if (result.status == false) {
+            console.log("FORM IS INVALID", result.status);
+            forget_status.innerHTML = '<span class="login-status" id="login-message"><span style="font-size: 40px;color: red;" class="material-symbols-outlined">priority_high</span>INCORRECT <span style="color: red;">USERNAME</span> OR <span style="color: red;">EMAIL </span></span>';
+            username_input.classList.add('input-error');
+            email_input.classList.add('input-error');
+          }
+          else if (result.status == true) {
+            console.log("FORM IS VALID", result.status);
+            // Submit the form
+            console.log('Submitting the form');
+            event.target.closest('form').submit();
+            button.disabled = true;
+          }
+        } catch (error) {
+          console.log("CODE PASS, NO JSON");
+          forget_status.innerHTML == ""
+          username_input.classList.remove('input-error');
+          email_input.classList.remove('input-error');
+        }
+      }
+    });
+
+  </script>
+
+{% endblock %}
+
+
+
+
+
+
+
+

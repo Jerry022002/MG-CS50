@@ -1,0 +1,97 @@
+{% extends "layout.html" %} 
+
+{% block title %} Verification {% endblock %} 
+
+{% block main %}
+
+    <div class="main_content">
+        <div class="container3">
+            <form class="sign_up2" action="/verify" method="post">
+                <p class="login_title1">Verification</p>
+                <div class="description">Hi <span>{{ username }}</span>, a verification code has been sent to <span>{{ user_email }}</span>.</div>
+                <div class="description">Please enter it to verify your email address.</div>
+                <div class="input-group">
+                    <p class="login_title">Verify your email address</p>
+                    <span class="code-status" id="check_code"></span>
+                    <input type="text" class="form-input" id="enter_code" name="verification_code" placeholder="Enter Verification Code">
+                    <a href="/verify?username={{ username }}&user_email={{ user_email }}&resend=true" class="forget">Resend Code</a>
+                </div>
+                <button class="btn2" type="submit">VERIFY EMAIL</button>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+        // Check verification code
+        let code_input = document.querySelector('input[name="verification_code"]');
+        let code_status = document.querySelector('#check_code');
+        
+        // Check for invalid and expired code
+        let submit_button = document.querySelector('.btn2');
+        submit_button.addEventListener('click', async function (event) {
+            event.preventDefault();
+
+            // Reset the form status
+            let isFormValid = true;
+
+            // Check if the code is empty
+            if (!code_input.value) {
+                code_status.textContent = "CODE REQUIRED";
+                code_input.classList.add('input-error');
+                console.log("No CODE is inputted");
+                isFormValid = false;
+            } else {
+
+                console.log("SEND CODE TO SERVER");
+                let response = await fetch('/verify', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'verification_code=' + encodeURIComponent(code_input.value),
+                });
+                
+                console.log("SERVER RETURNED JSON");
+                // If the server return json
+                try {
+                    console.log("RESPONSE STATUS: " + response.status);
+                    let result = await response.json(); // Parse the JSON response
+                    console.log("RESULT: " + result);
+                    if (result.missing_code) {
+                        code_status.textContent = "CODE REQUIRED";
+                        console.log("No CODE is inputted in SERVER SIDE");
+                        code_input.classList.add('input-error');
+                        isFormValid = false;
+                    } else if (result.invalid_code) {
+                        code_status.textContent = "INVALID CODE";
+                        console.log("Invalid CODE is inputted in SERVER SIDE");
+                        code_input.classList.add('input-error');
+                        isFormValid = false;
+                    } else if (result.expired_code) {
+                        code_status.textContent = "EXPIRED CODE";
+                        console.log("Expired CODE is inputted in SERVER SIDE");
+                        code_input.classList.add('input-error');
+                        isFormValid = false;
+                    }
+                } catch (error) {
+                    console.log("CODE PASS, SERVER NOT RETURN JSON");
+                    code_status.innerHTML = "";
+                    code_input.classList.remove('input-error');
+                    isFormValid = true;
+                }                
+            }
+            
+            console.log("FORM IS VALID: " + isFormValid);
+            if (isFormValid) {
+            
+            console.log("TRIGGER FORM SUBMISSION");
+            // Trigger the form submission
+            event.target.closest('form').submit();
+            }
+        });
+    </script>
+    
+{% endblock %}
+
+

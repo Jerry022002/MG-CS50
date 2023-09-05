@@ -1,0 +1,227 @@
+{% extends "layout.html" %} 
+
+{% block title %} Sign Up {% endblock %} 
+
+{% block main %}
+
+    <div class="main_content">
+        <div class="container3">
+            <form class="sign_up" action="/signup" method="post">
+                <p class="login_title">Sign up</p>
+                <div class="input-group">
+                    <input type="text" class="form-input" name="username" placeholder="Username" type="search">
+                    <span class="username-status" id="check_username"></span>
+                </div>
+                <div class="input-group">
+                    <input type="email" class="form-input" name="email" placeholder="Email">
+                    <span class="username-status" id="check_email"></span>
+                </div>
+                <div class="input-group">
+                    <input type="password" class="form-input" name="password" placeholder="Password">
+                    <span class="username-status" id="check_password"></span>
+                </div>
+                <div class="input-group">
+                    <input type="password" class="form-input" name="confirm_password" placeholder="Confirm password">
+                    <span class="username-status" id="check_confirm_password"></span>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox-input" name="rules" value="1" id="remember-checkbox">
+                    <label class="checkbox-label" for="remember-checkbox">I've read and agree to  <a href="/rules" class="forget">Terms of Service</a> </label>
+                    <span class="username-status" id="check_rules"></span>
+                </div>
+                <button class="btn2" type="submit">CREATE ACCOUNT</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Check username
+        let username_input = document.querySelector('input[name="username"]');
+        let username_status = document.querySelector('#check_username');
+        
+        username_input.addEventListener('input', async function() {
+            let response = await fetch('/signup?username=' + username_input.value);
+            let result = await response.json(); // Parse the JSON response
+            
+            if (result.username_exists) {
+                username_status.textContent = "USERNAME EXISTS";
+                username_input.classList.add('input-error');
+            } else {
+                username_status.innerHTML = "";
+                username_input.classList.remove('input-error');
+            }
+        })
+
+        // Check email
+        let email_input = document.querySelector('input[name="email"]');
+        let email_status = document.querySelector('#check_email');
+        
+        email_input.addEventListener('input', async function() {
+            let response = await fetch('/signup?email=' + email_input.value);
+            let result = await response.json(); // Parse the JSON response
+            
+            if (result.email_exists) {
+                email_status.textContent = "EMAIL EXISTS";
+                email_input.classList.add('input-error');
+            } else {
+                email_status.innerHTML = "";
+                email_input.classList.remove('input-error');
+            }
+        })
+
+        // Check password
+        let password_input = document.querySelector('input[name="password"]');
+        let password_status = document.querySelector('#check_password');
+        password_input.addEventListener('input', function(){
+            if (password_input.value.length < 8) {
+            password_status.textContent = "AT LEAST 8 CHARACTERS";
+            password_input.classList.add('input-error');
+            } else {
+            password_input.classList.remove('input-error');
+            password_status.innerHTML = "";
+            }
+        });
+
+        // Check confirm password
+        let confirm_status = document.querySelector('#check_confirm_password');
+        let confirm_password_input = document.querySelector('input[name="confirm_password"]');
+        
+        confirm_password_input.addEventListener('input', function(){
+            if (password_input.value !== confirm_password_input.value) {
+            confirm_status.textContent = "PASSWORDS DO NOT MATCH";
+            confirm_password_input.classList.add('input-error');
+            } else {
+            confirm_status.innerHTML = "";
+            confirm_password_input.classList.remove('input-error');
+            }
+        });
+
+        // Check rules
+        let rules_input = document.querySelector('input[name="rules"]');
+        let rules_status = document.querySelector('#check_rules');
+        rules_input.addEventListener('input', function(){
+            if (rules_input.checked) {
+            rules_status.innerHTML = "";
+            rules_input.classList.remove('input-error');
+            } else {
+            rules_input.classList.add('input-error');
+            rules_status.innerHTML = "MUST CONFIRM";
+            }
+        });
+
+        // Check email validity
+        function isValidEmail(email) {
+            // Regular expression for email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+         // Check username validity
+         function isValidUsername(username) {
+            // Regular expression for username validation
+            const emailRegex = /^[a-zA-Z0-9]+$/;
+            return emailRegex.test(username);
+        }
+
+        // Check wether user fully filled the form requirements before submitting
+        let submit_button = document.querySelector('.btn2');
+        submit_button.addEventListener('click', async function (event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Initialize a variable to track form validity
+        let isFormValid = true;
+
+        // Check if the username, email, password, and confirm password fields are valid
+        let isUsernameValid = (username_input.value.trim().length > 0);
+        let isUsernameValid2 = isValidUsername(username_input.value);
+        let isEmailValid = (email_input.value.trim().length > 0);
+        let isEmailValid2 = isValidEmail(email_input.value);
+        let isPasswordValid = (password_input.value.length >= 8);
+        let isConfirmPasswordValid = (confirm_password_input.value === password_input.value);
+        let isRulesChecked = rules_input.checked;
+
+        // Check the username
+        if (!isUsernameValid) {
+            username_status.textContent = "USERNAME IS REQUIRED";
+            username_input.classList.add('input-error');
+            isFormValid = false;
+        } else if (!isUsernameValid2) {
+            username_status.textContent = "INVALID USERNAME";
+            username_input.classList.add('input-error');
+            isFormValid = false;
+        } else {
+            username_status.innerHTML = "";
+            username_input.classList.remove('input-error');
+
+            // Check if the username already exists
+            let response = await fetch('/signup?username=' + username_input.value);
+            let result = await response.json();
+            if (result.username_exists) {
+                username_status.textContent = "USERNAME EXISTS";
+                username_input.classList.add('input-error');
+                isFormValid = false;
+            }
+        }
+
+        // Check the email
+        if (!isEmailValid) {
+            email_status.textContent = "EMAIL IS REQUIRED";
+            email_input.classList.add('input-error');
+            isFormValid = false;
+        } else if (!isEmailValid2) {
+            email_status.textContent = "INVALID EMAIL";
+            email_input.classList.add('input-error');
+            isFormValid = false;
+        } else {
+            email_status.innerHTML = "";
+            email_input.classList.remove('input-error');
+
+            // Check if the email already exists
+            let response = await fetch('/signup?email=' + email_input.value);
+            let result = await response.json();
+            if (result.email_exists) {
+                email_status.textContent = "EMAIL EXISTS";
+                email_input.classList.add('input-error');
+                isFormValid = false;
+            }
+        }
+
+        // Check the password
+        if (!isPasswordValid) {
+            password_status.textContent = "AT LEAST 8 CHARACTERS";
+            password_input.classList.add('input-error');
+            isFormValid = false;
+        } else {
+            password_status.innerHTML = "";
+            password_input.classList.remove('input-error');
+        }
+
+        // Check the confirm password
+        if (!isConfirmPasswordValid) {
+            confirm_status.textContent = "PASSWORDS DO NOT MATCH";
+            confirm_password_input.classList.add('input-error');
+            isFormValid = false;
+        } else {
+            confirm_status.innerHTML = "";
+            confirm_password_input.classList.remove('input-error');
+        }
+
+        // Check the rules checkbox
+        if (!isRulesChecked) {
+            rules_status.textContent = "PLEASE CONFIRM";
+            rules_input.classList.add('input-error');
+            isFormValid = false;
+        } else {
+            rules_status.innerHTML = "";
+            rules_input.classList.remove('input-error');
+        }
+
+        // If the form is valid, submit the form
+        if (isFormValid) {
+            event.target.closest('form').submit();
+            submit_button.disabled = true;
+        }
+    });
+    </script>
+
+{% endblock %}

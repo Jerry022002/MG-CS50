@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Successful</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,1,0" />    
+    <link href="\static\music4.ico" rel="icon">
+</head>
+<style>
+    
+    
+    .flash-message {
+        color: rgb(8, 172, 8);
+        font-size: 50px;
+        font-family: 'Pangolin', cursive;
+        font-weight: bold;     
+    }
+
+    .flash-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 95vh;
+    }
+    
+    #Tick_success {
+        font-size:60px;
+        vertical-align: middle;
+    }
+
+    #countdown {
+        margin-left: 12px;
+        font-weight: bold;
+        color: red;
+    }
+
+    .countdown {
+        font-size: 35px;
+        font-family: 'Pangolin', cursive;
+        color: rgb(0, 0, 0);
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        margin-top: 10px;
+    }
+
+</style>
+
+<body>
+    <div class="flash-container">
+        <div class="flash">
+            <div class="flash-message">
+                <span class="flash-message"><span class="material-symbols-outlined" id="Tick_success">check_circle</span>  {{ flash_message }}</span>  
+            </div>
+            <div class="countdown">Redirect to <span style="font-weight: bold; margin-left: 10px; margin-right: 10px;"> Login Page </span> in<span id="countdown"> 3s</span></div> <!-- Display countdown here -->
+
+        </div>
+    
+    </div>
+</body>
+
+<script>
+    const countdownDisplay = document.getElementById('countdown');
+    let countdown = 3; // Countdown duration in seconds
+
+    function updateCountdown() {
+        if (countdown > -1) {
+            countdownDisplay.innerHTML = "";
+            countdownDisplay.innerHTML = countdown + 's';
+            countdown--;
+            setTimeout(updateCountdown, 1000); // Update countdown every second (1000 milliseconds)
+        } else {
+            window.location.href = '/login'; // Redirect to login page after countdown
+        }
+    }
+
+    updateCountdown();
+</script>
+
+</html>

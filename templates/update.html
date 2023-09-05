@@ -1,0 +1,137 @@
+{% extends "layout.html" %}
+{% block title %} Update Password {% endblock %}
+
+{% block main %}
+
+  <div class="main_content">
+    <div class="container3">
+        <form class="sign_up1" id="forget_form" action="/update_password" method="post">
+            <p class="login_title" id="forget_title">Password Update</p>
+            <div class="input-group">
+                <input type="password" class="form-input" name="password" placeholder="Password">
+                <span class="username-status" id="check_password"></span>
+            </div>
+            <div class="input-group">
+                <input type="password" class="form-input" name="confirm_password" placeholder="Confirm password">
+                <span class="username-status" id="check_confirm_password"></span>
+            </div>
+            <button class="btn2" type="submit">UPDATE PASSWORD</button>      
+        </form> 
+    </div>
+  </div>
+
+  <script>
+    // Select elements
+    let password = document.querySelector('#forget_form input[name="password"]');
+    let confirm_password = document.querySelector('#forget_form input[name="confirm_password"]');
+    let password_status = document.querySelector('#check_password');
+    let confirm_password_status = document.querySelector('#check_confirm_password');
+    let button = document.querySelector('#forget_form button');
+    
+    // Client side check
+    button.addEventListener('click', async function (event) {
+        // Not allow to submit form if requirement is not met
+        event.preventDefault();
+
+        // Flag to check the form valid
+        let isFormValid = true;
+        let client_check = false
+    
+        /* CLIENT SIDE CHECK */
+
+        // If password is empty
+        if (!password.value) {
+            console.log('Password is empty');
+            password_status.innerHTML = 'CANNOT BE EMPTY';
+            password.classList.add('input-error');
+            isFormValid = false;
+        // If password is less than 8 characters
+        } else if (password.value.length < 8) {
+            console.log('Password must have at least 8 characters');
+            password_status.innerHTML = 'AT LEAST 8 CHARACTERS';
+            password.classList.add('input-error');
+            isFormValid = false;
+        } else {
+            console.log('Password is valid');
+            password_status.innerHTML = '';
+            password.classList.remove('input-error');
+            client_check = true;
+        }
+
+        // If confirm password is empty
+        if (!confirm_password.value) {
+            console.log('Confirm password is empty');
+            confirm_password_status.innerHTML = 'CANNOT BE EMPTY';
+            confirm_password.classList.add('input-error');
+            isFormValid = false;
+        // Check for match between password and confirm password
+        } else if (confirm_password.value !== password.value) {
+            console.log('Password do not match');
+            confirm_password_status.innerHTML = 'PASSWORD DO NOT MATCH';
+            confirm_password.classList.add('input-error');
+            isFormValid = false;
+        } else {
+            console.log('Confirm password is valid');
+            confirm_password_status.innerHTML = '';
+            confirm_password.classList.remove('input-error');
+        }
+
+        /* SERVER SIDE CHECK */
+        // Create form data using URLSearchParams
+        let formData = new URLSearchParams();
+        formData.append('password', password.value);
+        formData.append('confirm_password', confirm_password.value);
+
+        // Send request to server to check validity again
+        console.log('Sending request to server');
+        let response = await fetch('/update_password', {
+            method: 'POST',
+            headers: {
+                'content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: formData.toString(),
+        });
+        
+        // If server returns JSON
+        try {
+            console.log('Waiting for response');
+            // If server response JSON
+            console.log("RESPONSE STATUS: " + response.status);
+            let result = await response.json();
+            console.log('RESULT: ' + result);
+            // Display the result if see the error
+            if (result.status == false) {
+                if (result.key == 'password') {
+                    password_status.innerHTML = result.message;
+                    password.classList.add('input-error');
+                    console.log('CANNOT SUBMIT, ERROR: ', result.message);
+                    isFormValid = false;
+                } else if (result.key == 'confirm_password') {
+                    confirm_password_status.innerHTML = result.message;
+                    confirm_password.classList.add('input-error');
+                    console.log('CANNOT SUBMIT, ERROR: ', result.message);
+                    isFormValid = false;
+                }
+            }
+        } catch (error) {
+            console.log("CODE PASS, NO JSON RETURNED")
+            password_status.innerHTML = '';
+            confirm_password_status.innerHTML = '';
+            password.classList.remove('input-error');
+            confirm_password.classList.remove('input-error');
+            isFormValid = true;
+        }
+        
+        // If form is valid, submit the form
+        console.log("FORM IS VALID: " + isFormValid);
+        if (isFormValid) {
+            console.log('Submitting form');
+            event.target.closest('form').submit();
+        }
+    }); 
+    
+  </script>
+
+
+
+{% endblock %}

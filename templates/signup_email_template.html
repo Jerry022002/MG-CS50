@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1", width=device-width>
+    <!-- Google font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pangolin&display=swap" rel="stylesheet">
+    <!-- Style -->
+    <link href="static/email.css" rel="stylesheet">
+    <title>Music Generator: Verify your email</title>
+    <style>
+        body {
+            background-color: rgb(205, 243, 245);
+            justify-content: center; /* Center the content horizontally */
+            align-items: center; /* Center the content vertically */
+            margin: 0; /* Remove default body margin */
+            min-height: 100vh;
+            display: flex;
+        }
+
+        h1 {
+            font-weight: bold;
+            font-family: 'Pangolin', cursive;
+            color: black;
+            font-size: 40px;
+            margin-top: 0px;
+        }
+
+        .description {
+            font-family: 'Pangolin', cursive;
+            text-align: left;
+            color: black;
+            font-size: 18px;
+            padding-top: 10px;
+            margin-left: 40px;
+        }
+
+        .code {
+            font-family: 'Pangolin', cursive;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            font-size: 26px;
+        }
+
+        .container {
+            background-color: black;
+            width: 250px;
+            margin-top: 15px;
+            margin-bottom: 35px;
+            height: 42px;
+            padding-top: 7px;
+            text-align: center;
+            align-items: center;
+            border-radius: 8px;
+            margin-left: 240px;
+            padding-bottom: 3px
+        }
+
+        .container4 .description {
+            padding-right: 20px;
+        }
+
+        .final {
+            padding-left: 515px;
+            margin-top: 40px;
+        }
+
+        .innerlayer {
+            width: 750px;
+            height: 530px;
+            background-color: rgba(255, 255, 255, 0.575);
+            border-radius: 10px;
+            
+        }
+
+        .innerlayer h1 {
+            font-size: 30px;
+            font-weight: bold;
+            margin-left: 25px;
+            padding-top: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            margin-top: 5px;
+        }
+
+        .code {
+            align-items: center;
+            text-align: center;
+            justify-content: center;
+        }
+
+        .description span {
+            font-weight: bold;
+            color: red;
+        }
+
+        .music {
+            color: rgb(45, 240, 247);
+            margin-left: 15px;
+        }
+
+        .generator {
+            color: yellow;
+        }
+
+        .container-title {
+            background-color: rgba(92, 9, 92, 0.786);
+            border-radius: 10px 10px  3px 3px ;
+            width: 750px;
+        }
+
+        #b4code {
+            text-align: center;
+            margin-left: 0px;
+            font-size: 19px;
+            margin-top: 30px;
+        }
+
+        #signature {
+            margin-left:0px;
+            margin-top: 0px;
+            font-style: italic;
+            padding-top:5px;
+        }
+
+        
+    </style>
+</head>
+<body>
+    <div class="outer-container innerlayer">
+        <div class="container-title">
+            <h1><span class="music">MUSIC</span> <span class="generator">GENERATOR</span></h1>
+        </div>
+        <div class="description">Hi <span>{{ username }}</span>!</div>
+        <div class="description">Just one more step to experience Music Generator</div>
+        <div class="container4">
+            <div id="b4code" class="description"><b></b>Please enter the verification code below to verify your email address.</div>
+            <div class="container">
+                <div class="code">{{ verification_code }}</div>
+            </div>
+        </div>
+        <div class="description">Notice: The Verification Code will expire in <span>3 minutes</span></div>
+        <div class="description">if you have any question or feedback, please do not hesitate to contact our team</div>
+        <div class="final">
+            <div class="description"><b>Best regard!</b></div>
+            <div id="signature" class="description">Music Generator Team</div>
+        </div>
+    </div>
+    
+</body>
+</html>

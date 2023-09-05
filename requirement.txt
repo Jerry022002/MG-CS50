@@ -1,0 +1,15 @@
+flask
+flask_session
+check_info
+werkzeug
+datetime
+functools
+flask_mail
+dotenv
+os
+flask_apscheduler
+re
+random
+string
+mysql
+

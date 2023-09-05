@@ -1,0 +1,99 @@
+{% extends "layout.html" %} {% block title %} Log In {% endblock %} 
+
+{% block main %}
+
+    <div class="main_content">
+        <div class="container3">
+            <form class="sign_up1" action="/login" method="post">
+                <p class="login_title">Sign in</p>
+                <div class="input-group">
+                    <input type="text" name="username" class="form-input" placeholder="Username">
+                </div>
+                <div class="input-group">
+                    <input type="password" name="password" class="form-input" placeholder="Password">
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" name="remember_me" class="checkbox-input" id="remember-checkbox">
+                    <label class="checkbox-label" for="remember-checkbox">Remember me</label>
+                    <a href="/signup" class="forget">Create account?</a>
+                </div>  
+                <button class="btn2" type="submit">SIGN IN</button>
+                <div class="form-bottom">
+                    <a href="/forget" class="forget">Forget your Password?</a>
+                </div>
+                <div class="status"></div>
+            </form> 
+        </div>
+    </div>
+
+    <script>
+        // Select the elements in the form
+        let username_input = document.querySelector('input[name="username"]');
+        let password_input = document.querySelector('input[name="password"]');
+        let login_status = document.querySelector('.status');
+        
+        // Select button
+        let login_button = document.querySelector('button[type="submit"]');
+        login_button.addEventListener('click', async function (event) {
+            event.preventDefault();
+
+            let isFormValid = true;
+
+            // Check if the username and password fields are empty
+            if (!username_input.value || !password_input.value) {
+                username_input.classList.add('input-error');
+                password_input.classList.add('input-error');
+                login_status.innerHTML = '<span class="login-status" id="login-message"><span style="font-size: 40px;color: red;" class="material-symbols-outlined">priority_high</span>INCORRECT <span style="color: red;">USERNAME</span> OR <span style="color: red;">PASSWORD </span></span>';
+                isFormValid = false;
+            } else {
+                console.log('Username and password is inputted');
+
+                // Create form data using URLSearchParams
+                let formData = new URLSearchParams();
+                formData.append('username', username_input.value);
+                formData.append('password', password_input.value);
+
+                // Send a request to the server to check if the username and password are correct
+                console.log('Sending a request to the server to check if the username and password are correct');
+                let response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: formData.toString(),
+                       
+                    
+                });
+
+                console.log('Server response:');
+                // If server return JSON
+                try {
+                    console.log("RESPONSE STATUS: " + response.status);
+                    let result = await response.json();
+                    console.log("RESULT: " + result);
+                    // Display the result if see the error
+                    if (result.status == false) {
+                        login_status.innerHTML = '<span class="login-status" id="login-message"><span style="font-size: 40px;color: red;" class="material-symbols-outlined">priority_high</span>INCORRECT <span style="color: red;">USERNAME</span> OR <span style="color: red;">PASSWORD </span></span>';
+                        username_input.classList.add('input-error');
+                        password_input.classList.add('input-error');
+                        console.log("RESULT: " + result);
+                        isFormValid = false;
+                    }
+                } catch (error) {
+                    console.log("CODE PASS, SEVER NOT RETURN JSON")
+                    login_status.innerHTML = ""
+                    isFormValid = true;
+                }
+            }
+
+            console.log('FORM IS VALID: ' + isFormValid);
+            if (isFormValid) {
+                // Submit the form
+                console.log('Submitting the form');
+                event.target.closest('form').submit();
+            }
+        });
+
+    </script>
+
+{% endblock %}
